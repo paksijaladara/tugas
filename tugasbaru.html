@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Document</title>
+        <style>
+        tr,td,table{
+            border: 1px solid blue;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <h1>Aplikasi E Commerse Sederhana</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>No</td>
+                            <td>Product</td>
+                            <td>Harga</td>
+                            <td>Gambar Product</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                    </tbody>
+                </table>
+                <br><br>
+                <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+              <!-- /  <h3 id="keranjang"></h3><br> -->
+                <h2 id="pembayaran"></h2><br><br>
+                <h2 id="timer"></h2>
+
+        </center>   
+    </body>
+    <script>
+        class Commerce{
+            constructor(a,b,c){
+                this.Product=a,
+                this.Harga=b,
+                this.Gambar=c
+            }
+        }
+        var listdata=[
+            new Commerce('pepsodent',5000,'https://dynamic.zacdn.com/8otZ_I9Cg8d-c7To44DIW9jgBTY=/fit-in/346x500/filters:quality(90):fill(ffffff)/http://static.id.zalora.net/p/pepsodent-7040-4752902-1.jpg'),
+            new Commerce('head and shoulders',7000,'https://images-na.ssl-images-amazon.com/images/I/81GmXuYbrNL._SL1500_.jpg'),
+            new Commerce('lifebuoy',10000,'https://img3.ralali.id/mediaflex/500/assets/img/Libraries/img-163129-1671-lifebuoy-bw-complete-gel-6x4x100ml.jpg'),
+        ]
+        let cart=[]
+        const printProd=(a)=>{
+            let output=''
+            a.forEach((val,index)=>{
+                output+=`<tr>
+                            <td>${index+1+'.'}</td>
+                            <td id='prodProduct'>${val.Product}</td>
+                            <td id='prodHarga'>${val.Harga}</td>
+                            <td id='prodGambar'><img src=${val.Gambar} height='150px' width='170px'></td>
+                            <td><button onclick="add(${index})">Add to cart</button></td>
+                        </tr>`
+            })
+            document.getElementsByTagName('tbody')[0].innerHTML=output
+        }
+        printProd(listdata)
+        const printCart=(a)=>{
+            let output=''
+            document.getElementsByTagName('thead')[1].innerHTML=`<tr>
+                                                                    <td>No.</td>
+                                                                    <td>Product</td>
+                                                                    <td>Harga</td>
+                                                                    <td>Gambar</td>
+                                                                    <td></td>
+                                                                </tr>`
+            a.forEach((val,index)=>{
+                output+=`<tr>
+                            <td>${index+1+'.'}</td>
+                            <td>${val.Product}</td>
+                            <td>${val.Harga}</td>
+                            <td><img src=${val.Gambar} height="150px" width="170px"></td>
+                            <td><button onclick="remove(${index})">Remove from cart</button></td>
+                        </tr>`
+            })
+            document.getElementsByTagName('tbody')[1].innerHTML=output
+            document.getElementById('pembayaran').innerHTML=`pembayaran anda Rp. ${totalHarga(cart)}`
+            
+        }
+        const add=(index)=>{
+            cart.push(listdata[index])
+            printCart(cart)
+        }
+        const remove=(index)=>{
+            cart.splice(index,1)
+            printCart(cart)
+        }
+        const totalHarga=(index)=>{
+            var Total=0
+            for (i=0;i<index.length;i++){
+                Total+=cart[i].Harga}
+                return Total
+        }
+        const btnPay=()=>{
+            var bayar = document.getElementById('bayar').value
+            var Total =totalHarga(cart)
+            var output=''
+            if(bayar<Total){
+                output='kurang cuy'
+                alert(output)
+            }else if(bayar==Total){
+                output='transaksi anda berhasil'
+                alert(output)
+                restart()
+            }else{
+                output=`transaksi anda berhasil, kembalian anda Rp${(bayar-Total)}`
+                alert(output)
+                restart()
+            }
+        }
+        var setTimer = 20
+        var time = setTimer
+        var timer
+        const start=()=>{
+            timer= setInterval(waktu,1000)
+        }
+        const waktu=()=>{
+            time=-1
+            document.getElementById('timer').innerHTML=`waktu anda tersisia${time}`
+            console.log(time)
+            if(time<=0){
+                clearInterval(timer)
+                document.getElementById('timer').innerHTML='waktu anda habis'
+                restart()
+            }
+        }
+        const restart=()=>{
+            clearInterval(timer)
+            document.getElementById('keranjang').innerHTML='keranjang anda kosong'
+            document.getElementById('out').innerHTML=``
+            document.getElementsByTagName('table')[1].innerHTML=''
+            document.getElementById('notifpembayaran').innerHTML=''
+            document.getElementsByTagName('table')[2].innerHTML=''
+            document.getElementById('timer').innerHTML=''
+            cart.splice(0,cart.length)
+            time = setTimer
+            console.log(time)
+        }
+
+
+    </script>
+</html>
